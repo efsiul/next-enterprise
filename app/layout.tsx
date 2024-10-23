@@ -1,15 +1,17 @@
-import "@package/styles/tailwind.css";
-import Navbar from "@organisms/Navbar";
-import React from "react";
-
+import React from "react"
+import "@package/styles/tailwind.css"
+import StyleGlobal from "@package/config/global/style-global"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        <main>{children}</main>
+        <main>
+          <StyleGlobal>
+            {children}
+          </StyleGlobal>
+        </main>
       </body>
     </html>
-  );
+  )
 }

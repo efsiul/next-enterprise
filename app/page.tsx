@@ -1,19 +1,59 @@
-"use client"
-import Grid from "@mui/material/Grid2"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import Button from "@package/components/atoms/Button"
+"use client";
+
+import Grid from "@mui/material/Grid2";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { GetToken } from "@api/admin/auth/get-token/page";
+import CustomCard from "@atoms/custom-card";
+import CustomRadio from "@atoms/custom-radio";
+import FancyButton from "@atoms/fancy-button";
+import Title from "@atoms/title";
+import { setKeyApi } from "@utils/utilities";
+
 
 const HomePage: React.FC = () => {
-  const router = useRouter()
+  const { t } = useTranslation();
+  const router = useRouter();
+  const [selectedOption, setSelectedOption] = useState("POS");
+  const [checkoutType, setCheckoutType] = useState<string | null>(null);
 
-  const handleLoginClick = () => {
-    router.push("/account/login")
-  }
+  
+  const fetchToken = async () => {
+    const token = await GetToken()
+    if (token) {
+      setKeyApi(token);
+    } else {
+      console.error("Token is undefined");
+    }
 
-  const handleFeaturesClick = () => {
-    router.push("/features")
-  }
+  };
+
+  useEffect(() => {
+    if (!checkoutType) {
+      fetchToken();
+    }
+  }, [checkoutType]);
+
+  const radioOptions = [
+    { id: "pos", value: "POS" },
+    { id: "sco", value: "SCO" },
+  ];
+
+  const handleRadioChange = (value: string) => {
+    setSelectedOption(value);
+  };
+
+  const handleButtonClick = () => {
+    setCheckoutType(selectedOption);
+
+    if (selectedOption === "POS") {
+      router.push("/account/login");
+    } else if (selectedOption === "SCO") {
+      router.push("/selfcheckout/checkout");
+    }
+  };
 
   return (
     <Grid
@@ -25,44 +65,68 @@ const HomePage: React.FC = () => {
         background: "linear-gradient(to right, black, #2c3e50, #0064dc)",
         alignItems: "center",
         justifyContent: "center",
+        textAlign: "center",
       }}
     >
-      <Grid size={{ xs: 12, md: 6 }} display="flex" justifyContent={{ xs: "center", md: "flex-end" }}>
-        <Image
-          src="/img/selfcheckout.jpg"
-          alt="Checkout"
-          width={500}
-          height={400}
-          style={{ width: 'auto', height: 'auto' }}
-          className="rounded-lg shadow-lg"
-          priority
-        />
-      </Grid>
+      <Grid size={{ xs: 12, md: 6 }} textAlign={{ xs: "center", md: "center" }} padding={{ md: "0 90px" }}>
+        {selectedOption === "POS" && (
+          <CustomCard
+            beforeContent={<Title text={t("tle_point_sale")} size="h2" sx={{ color: "#fff" }} />}
+            afterContent={
+              <>
+                <Grid size={{ xs: 12, md: 4 }}>
+                  <Grid size={{ xs: 12, md: 11 }} spacing={5}>
+                    <Title text={t("tle_point_sale")} size="h3" sx={{ color: "#fff" }} />
+                  </Grid>
+                  <Image
+                    src="/img/pointSale.png"
+                    alt="Punto de Venta"
+                    width={400}
+                    height={400}
+                    style={{ borderRadius: "20px" }}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <FancyButton label={t("lbl_login")} variant="primary" onClick={handleButtonClick} />
+                </Grid>
+              </>
+            }
+          />
+        )}
 
-      <Grid size={{ xs: 12, md: 6 }} textAlign={{ xs: "center", md: "left" }} padding={{ md: "0 24px" }}>
-        <h1 className="mb-4 text-5xl font-bold text-white md:text-6xl">SELF CHECKOUT</h1>
+        {selectedOption === "SCO" && (
+          <CustomCard
+            beforeContent={<Title text={t("tle_self_checkout")} size="h2" sx={{ color: "#fff" }} />}
+            afterContent={
+              <>
+                <Grid size={{ xs: 12, md: 4 }}>
+                  <Grid size={{ xs: 12, md: 12 }}>
+                    <Title text={t("tle_self_checkout")} size="h3" sx={{ color: "#fff" }} />
+                  </Grid>
+                  <Image
+                    src="/img/selfCheckout.png"
+                    alt="SelfCheckout"
+                    width={400}
+                    height={400}
+                    style={{ borderRadius: "20px" }}
+                  />
+                </Grid>
+                <Grid size={{ xs: 12, md: 4 }}>
+                  <FancyButton label={t("lbl_welcome")} variant="primary" onClick={handleButtonClick} />
+                </Grid>
+              </>
+            }
+          />
+        )}
 
-        <p className="mb-6 text-xl text-gray-200 md:text-2xl">Mejorando la experiencia en tienda</p>
-
-        <Grid container justifyContent={{ xs: "center", md: "flex-start" }} spacing={2}>
-          <Grid size={{ xs: 6, md: 6 }}>
-            <Button
-              label="Iniciar Sesión"
-              onClick={handleLoginClick}
-              className="rounded-lg bg-blue-600 px-6 py-3 text-lg text-white transition hover:bg-blue-700"
-            />
-          </Grid>
-          <Grid size={{ xs: 6, md: 6 }}>
-            <Button
-              label="Ver Funcionalidades"
-              onClick={handleFeaturesClick}
-              className="rounded-lg bg-gray-200 px-6 py-3 text-lg text-blue-600 transition hover:bg-gray-300"
-            />
+        <Grid container justifyContent={{ xs: "center", md: "center" }} spacing={5} sx={{ marginTop: "80px" }}>
+          <Grid size={{ xs: 12 }}>
+            <CustomRadio options={radioOptions} name="pos-sco-radio" onChange={handleRadioChange} />
           </Grid>
         </Grid>
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

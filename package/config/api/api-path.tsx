@@ -1,0 +1,11 @@
+export const BASE_URL_AUTHENTICATION = "/AUTHENTICATION-SERVICE/rhi-bpc/"
+export const BASE_URL_ADMINISTRATION_USER = "/ADMINISTRATION-SERVICE/rhi-bpc/v2/user/"
+export const BASE_URL_ADMINISTRATION_TYPE_USER = "/ADMINISTRATION-SERVICE/rhi-bpc/v2/type-user/"
+export const BASE_URL_ADMINISTRATION_STORE = "/ADMINISTRATION-SERVICE/rhi-bpc/v2/store/"
+export const BASE_URL_ADMINISTRATION_SUBSIDIARY_SYS_ATRIB =
+  "/ADMINISTRATION-SERVICE/rhi-bpc/v2/subsidiary-system-attributes/"
+export const BASE_URL_CUSTOMER = "/CUSTOMER-SERVICE/rhi-bpc/v2/customer/"
+export const BASE_URL_CUSTOMER_VALIDATION = "/CUSTOMER-SERVICE/rhi-bpc/v2/customer-type-validation-method/"
+export const BASE_URL_CUSTOMER_TYPEDNI = "/CUSTOMER-SERVICE/rhi-bpc/v2/type-customer-dni/"
+export const BASE_URL_SALE = "/SALE-SERVICE/rhi-bpc/v2/sale/"
+export const BASE_URL_SALE_PRODUCT_SKU = "/SALE-SERVICE/rhi-bpc/v2/product-sku/"
