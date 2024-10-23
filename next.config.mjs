@@ -5,13 +5,17 @@ import { env } from "./env.mjs"
 /**
  * @type {import('next').NextConfig}
  */
-const config = withPlugins([[withBundleAnalyzer({ enabled: env.ANALYZE })]], {
+const nextConfig = {
   reactStrictMode: true,
   experimental: { instrumentationHook: false },
   env: {
-    REACT_APP_API_URL: process.env.REACT_APP_API_URL, // Para que esté disponible en el cliente
+    REACT_APP_API_URL: process.env.REACT_APP_API_URL,
+    API_PASS_SERVICE: process.env.REACT_APP_API_PASS_SERVICE,
+    REACT_APP_API_KEY: process.env.REACT_APP_API_KEY,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_TYPE_POS: process.env.NEXT_PUBLIC_TYPE_POS,
+    NEXT_PUBLIC_STORE_NUMBER: process.env.NEXT_PUBLIC_STORE_NUMBER,
   },
-
   rewrites() {
     return [
       { source: "/healthz", destination: "/api/health" },
@@ -20,6 +24,15 @@ const config = withPlugins([[withBundleAnalyzer({ enabled: env.ANALYZE })]], {
       { source: "/ping", destination: "/api/health" },
     ]
   },
-})
+}
 
-export default config
+export default withPlugins(
+  [
+    [
+      withBundleAnalyzer({
+        enabled: env.ANALYZE === "true",
+      }),
+    ],
+  ],
+  nextConfig
+)
